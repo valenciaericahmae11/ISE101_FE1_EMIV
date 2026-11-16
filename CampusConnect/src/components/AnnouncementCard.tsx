@@ -1,6 +1,8 @@
+import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 type AnnouncementCardProps = {
+  id: string;
   title: string;
   category: string;
   read: boolean;
@@ -8,6 +10,7 @@ type AnnouncementCardProps = {
 };
 
 export default function AnnouncementCard({
+  id,
   title,
   category,
   read,
@@ -25,14 +28,26 @@ export default function AnnouncementCard({
       <Text style={styles.category}>Category: {category}</Text>
       <Text style={styles.status}>Status: {read ? 'Read' : 'Unread'}</Text>
 
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={read ? `Mark ${title} as unread` : `Mark ${title} as read`}
-        onPress={onMarkRead}
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-      >
-        <Text style={styles.buttonText}>{read ? 'Mark as Unread' : 'Mark as Read'}</Text>
-      </Pressable>
+      <View style={styles.actionRow}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={read ? `Mark ${title} as unread` : `Mark ${title} as read`}
+          onPress={onMarkRead}
+          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        >
+          <Text style={styles.buttonText}>{read ? 'Mark as Unread' : 'Mark as Read'}</Text>
+        </Pressable>
+
+        <Link href={('/announcements/' + id) as any} asChild>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`View details for ${title}`}
+            style={({ pressed }) => [styles.detailButton, pressed && styles.buttonPressed]}
+          >
+            <Text style={styles.detailButtonText}>View details</Text>
+          </Pressable>
+        </Link>
+      </View>
     </View>
   );
 }
@@ -98,6 +113,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#1F2937',
   },
+  actionRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
   button: {
     backgroundColor: '#2563EB',
     borderRadius: 10,
@@ -106,12 +126,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
+  },
+  detailButton: {
+    borderRadius: 10,
+    minHeight: 44,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#E0F2FE',
+    flex: 1,
   },
   buttonPressed: {
     opacity: 0.8,
   },
   buttonText: {
     color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 14,
+  },
+  detailButtonText: {
+    color: '#0F4C81',
     fontWeight: '700',
     fontSize: 14,
   },
