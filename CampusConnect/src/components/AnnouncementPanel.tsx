@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import AnnouncementCard from './AnnouncementCard';
 
@@ -15,6 +15,8 @@ const initialAnnouncements: AnnouncementItem[] = [
   { id: 'ANN-002', title: 'Sports Festival Announcement', category: 'Events', read: false },
   { id: 'ANN-003', title: 'Campus Clean-up Drive', category: 'Community', read: true },
   { id: 'ANN-004', title: 'Library Study Hours Extended', category: 'Notice', read: false },
+  { id: 'ANN-005', title: 'Student Leadership Applications Open', category: 'Academic', read: false },
+  { id: 'ANN-006', title: 'Wellness Week Activities Schedule', category: 'Events', read: true },
 ];
 
 export default function AnnouncementPanel() {
@@ -48,17 +50,21 @@ export default function AnnouncementPanel() {
       <Text style={styles.counter}>Unread: {unreadCount} / Total: {totalCount}</Text>
       <Text style={styles.status}>Status: {statusMessage}</Text>
 
-      <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
-        {announcements.map((announcement) => (
+      <FlatList
+        data={announcements}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
           <AnnouncementCard
-            key={announcement.id}
-            title={announcement.title}
-            category={announcement.category}
-            read={announcement.read}
-            onMarkRead={() => handleMarkRead(announcement.id)}
+            title={item.title}
+            category={item.category}
+            read={item.read}
+            onMarkRead={() => handleMarkRead(item.id)}
           />
-        ))}
-      </ScrollView>
+        )}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.list}
+      />
     </View>
   );
 }
@@ -87,6 +93,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   list: {
-    paddingBottom: 20,
+    paddingBottom: 24,
+  },
+  separator: {
+    height: 12,
   },
 });
